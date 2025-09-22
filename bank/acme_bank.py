@@ -1,6 +1,8 @@
+# Banking Project 
 import csv
 
 
+            
 # Casher class
 class Casher:
     
@@ -21,10 +23,40 @@ class Casher:
         
     def add_customer_account(self):
         pass
+    
+# Bank class
+class Bank:
+    while True:
+        print('---------------------------------> Welcome to the ACME Bank! <---------------------------------')
+        print("SELECT A CHOICE")
+        print("")
+        print("1- Add New Customer")
+        print("2- Log in ")
+        print("3- Exit")
+        print("")
+
+        selection = input("Enter a choice: ")
+
+        if(selection == "1"):
+            e1()
+            break
+        elif(selection == "2"):
+            e2()
+            break
+        elif(selection == "3"):
+            e3()
+            break
+        elif(selection == "e7"):
+            print("Goodbye")
+            break
+        else:
+            print("Invalid choice. Enter a Number choice from '1'-'3'")
+            
         
 
-if __name__ == '__main__':
-    print('---------------------------------> Welcome to the ACME Bank! <---------------------------------')
+# if __name__ == '__main__':
+    
+Bank()
           
     
     
