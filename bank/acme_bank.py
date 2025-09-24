@@ -4,13 +4,6 @@ import csv
 # Casher class
 class Casher:
     
-    # initial values 
-    account_id = None
-    first_name = None
-    last_name = None
-    password = None
-    initial_checking_balance = 0.0
-    initial_saving_balance = 0.0
     
     def __init__(self, account_id, first_name, last_name, password, checking_balance, saving_balance):
         self.account_id = account_id
@@ -25,17 +18,17 @@ class Casher:
         
         print('Fill the following fields: ')
         
-        account_id = input('Enter Account Id (only numbers): ')
+        account_id = input('Enter Account Id (5 digits only): ')
         
         while True:
-            if account_id.isdigit():
+            if account_id.isdigit() and len(account_id) == 5:
             #  with open('bank.csv','a',newline='') as file: 
             #     writer = csv.writer(file)
                 # writer.writerow(account_id.split(','))
                 break
             else:
-                print('Account id MUST contain of unique numbers')
-                account_id = input('Enter Account Id (only numbers): ')
+                print('Account id MUST contain of 5 unique numbers')
+                account_id = input('Enter Account Id (5 digits only): ')
                 
             
         first_name = input('Enter First name: ')
@@ -64,7 +57,7 @@ class Casher:
                 last_name = input('Enter your Last name: ')
                 
         
-        password = input('Enter a Password for the account: ')
+        password = input('Enter a Password for the account (9 inputs): ')
         
         while True:
             if password != '' and len(password) == 9 :
@@ -75,7 +68,7 @@ class Casher:
                     break
             else:
                 print('Password MUST contain of at least 9 inputs')
-                password = input('Enter a Password for the account: ')
+                password = input('Enter a Password for the account (9 inputs): ')
                 
         initial_checking_balance = input('Enter initial Checking balance: ')
         while True:
@@ -106,11 +99,28 @@ class Casher:
         with open('bank.csv','a',newline='') as file: 
                 writer = csv.writer(file)        
                 writer.writerow([account_id, first_name, last_name, password, initial_checking_balance, initial_saving_balance])
+        print('Customer account added successfully!')
 
                
 # Accounts class               
-class Accounts():
-    pass
+class Accounts:
+    def __init__(self, account_id , password):
+        self.account_id = account_id
+        self.password = password
+        
+    def user_login():
+        
+        loggedin = False
+        while loggedin != True:
+            account_id = input('Account Id (Must contain of 5 digits): ')
+            password = input('Account Password (Must contain of 9 inputs): ')
+            with open('bank.csv','r',newline='')as file:
+                reader = csv.reader(file)
+                for row in reader:
+                    print(row)
+        
+        
+        
       
 # Bank class
 class Bank:
@@ -128,9 +138,9 @@ class Bank:
         if(selection == "1"):
             print(Casher.add_customer_account())
             print("")
-            break
+            2
         elif(selection == "2"):
-            e2()
+            print(Accounts.user_login())
             print("")
             break
         elif (selection == "3"):
