@@ -9,8 +9,8 @@ class Casher:
     first_name = None
     last_name = None
     password = None
-    checking_balance = 0.0
-    saving_balance = 0.0
+    initial_checking_balance = 0.0
+    initial_saving_balance = 0.0
     
     def __init__(self, account_id, first_name, last_name, password, checking_balance, saving_balance):
         self.account_id = account_id
@@ -27,23 +27,82 @@ class Casher:
         account_id = input('Enter Account Id (only numbers): ').split()
         while True:
             if account_id[0].isdigit():
-            # int(account_id)
-             with open('bank.csv','a') as file: 
+             with open('bank.csv','a+',newline='') as file: 
                 writer = csv.writer(file)
                 writer.writerow(account_id)
                 break
             else:
-                print('ID MUST contain of unique numbers')
+                print('Account id MUST contain of unique numbers')
                 account_id = input('Enter Account Id (only numbers): ').split()
                 
             
-        first_name = input('Enter your First name: ').strip()
+        first_name = input('Enter First name: ').split()
+        while True:
+            # need modify (it write also if the rest in number ex. 383j or j888)
+            if not first_name[0].isdigit():
+                with open('bank.csv','a',newline='') as file: 
+                    writer = csv.writer(file )
+                    writer.writerow(first_name)
+                    break
+            else:
+                print('First Name MUST contain only of string')
+                first_name = input('Enter First name: ').split()
+                
+                
+        last_name = input('Enter Last name: ').split()
+        while True:
+            # need modify (it write also if the rest in number ex. 383j or j888)
+            if not last_name[0].isdigit():
+                with open('bank.csv','a',newline='') as file: 
+                    writer = csv.writer(file )
+                    writer.writerow(last_name)
+                    break
+            else:
+                print('Last Name MUST contain only of string')
+                last_name = input('Enter your Last name: ').split()
+                
         
+        password = input('Enter a Password for the account: ').split()
         
-        last_name = input('Enter your Last name: ').strip()
-        password = input('Enter a Password for the account: ')
-        checking_balance = float(input('Enter initial Checking balance: '))
-        checking_balance = float(input('Enter initial Saving balance: ')) 
+        while True:
+            # password != None and len(password) == 9
+            if password != None :
+                
+                with open('bank.csv','a+',newline='') as file: 
+                    writer = csv.writer(file)
+                    writer.writerow(password)
+                    break
+            else:
+                print('Password MUST contain of at least 9 inputs')
+                password = input('Enter a Password for the account: ').split()
+                
+        initial_checking_balance = input('Enter initial Checking balance: ').split()
+        while True:
+            # is_float = isinstance(initial_checking_balance, float)
+            
+            if initial_checking_balance[0].isdigit():
+             with open('bank.csv','a+',newline='') as file: 
+                writer = csv.writer(file)
+                writer.writerow(initial_checking_balance)
+                break
+            else:
+                print('Initial checking balance MUST contain of numbers')
+                initial_checking_balance = input('Enter initial Checking balance: ').split()
+        
+        initial_saving_balance = input('Enter initial Saving balance: ').split()
+        while True:
+            
+            if initial_saving_balance[0].isdigit():
+             with open('bank.csv','a+',newline='') as file: 
+                writer = csv.writer(file)
+                writer.writerow(initial_saving_balance)
+                break
+            else:
+                print('Initial checking balance MUST contain of numbers')
+                initial_saving_balance = input('Enter initial Checking balance: ').split()
+               
+                
+        # initial_checking_balance = float(input('Enter initial Saving balance: ')) 
                 
     
 # Bank class
