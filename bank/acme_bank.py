@@ -29,9 +29,9 @@ class Casher:
         
         while True:
             if account_id.isdigit():
-             with open('bank.csv','a',newline='') as file: 
-                writer = csv.writer(file)
-                writer.writerow(account_id.split(','))
+            #  with open('bank.csv','a',newline='') as file: 
+            #     writer = csv.writer(file)
+                # writer.writerow(account_id.split(','))
                 break
             else:
                 print('Account id MUST contain of unique numbers')
@@ -42,9 +42,9 @@ class Casher:
         while True:
             # need modify (it write also if the rest in number ex. 383j or j888)
             if not first_name.isdigit():
-                with open('bank.csv','a',newline='') as file: 
-                    writer = csv.writer(file )
-                    writer.writerow(first_name.split(','))
+                # with open('bank.csv','a',newline='') as file: 
+                #     writer = csv.writer(file )
+                    # writer.writerow(first_name.split(','))
                     break
             else:
                 print('First Name MUST contain only of string')
@@ -55,9 +55,9 @@ class Casher:
         while True:
             # need modify (it write also if the rest in number ex. 383j or j888)
             if not last_name.isdigit():
-                with open('bank.csv','a',newline='') as file: 
-                    writer = csv.writer(file )
-                    writer.writerow(last_name.split(','))
+                # with open('bank.csv','a',newline='') as file: 
+                #     writer = csv.writer(file )
+                    # writer.writerow(last_name.split(','))
                     break
             else:
                 print('Last Name MUST contain only of string')
@@ -69,9 +69,9 @@ class Casher:
         while True:
             if password != '' and len(password) == 9 :
                 
-                with open('bank.csv','a+',newline='') as file: 
-                    writer = csv.writer(file)
-                    writer.writerow(password.split(','))
+                # with open('bank.csv','a+',newline='') as file: 
+                #     writer = csv.writer(file)
+                    # writer.writerow(password.split(','))
                     break
             else:
                 print('Password MUST contain of at least 9 inputs')
@@ -83,9 +83,9 @@ class Casher:
             # is_float = isinstance(initial_checking_balance, float)
         
             if initial_checking_balance.isdigit():
-             with open('bank.csv','a+',newline='') as file: 
-                writer = csv.writer(file)
-                writer.writerow(initial_checking_balance.split(','))
+            #  with open('bank.csv','a+',newline='') as file: 
+            #     writer = csv.writer(file)
+                # writer.writerow(initial_checking_balance.split(','))
                 break
             else:
                 print('Initial checking balance MUST contain of numbers')
@@ -95,13 +95,18 @@ class Casher:
         while True:
             
             if initial_saving_balance.isdigit():
-             with open('bank.csv','a+',newline='') as file: 
-                writer = csv.writer(file)
-                writer.writerow(initial_saving_balance.split(','))
+            #  with open('bank.csv','a+',newline='') as file: 
+            #     writer = csv.writer(file)
+                # writer.writerow(initial_saving_balance.split(','))
                 break
             else:
                 print('Initial checking balance MUST contain of numbers')
                 initial_saving_balance = input('Enter initial Checking balance: ')
+                
+        with open('bank.csv','a',newline='') as file: 
+                writer = csv.writer(file)        
+                writer.writerow([account_id, first_name, last_name, password, initial_checking_balance, initial_saving_balance])
+
                
 # Accounts class               
 class Accounts():
