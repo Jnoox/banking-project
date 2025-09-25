@@ -4,7 +4,6 @@ import csv
 # Casher class
 class Casher:
     
-    
     def __init__(self, account_id, first_name, last_name, password, checking_balance, saving_balance):
         self.account_id = account_id
         self.first_name = first_name
@@ -111,16 +110,25 @@ class Accounts:
     def user_login():
         
         loggedin = False
+        
         while loggedin != True:
             account_id = input('Account Id (Must contain of 5 digits): ')
             password = input('Account Password (Must contain of 9 inputs): ')
             with open('bank.csv','r',newline='')as file:
                 reader = csv.reader(file)
                 for row in reader:
-                    print(row)
-        
-        
-        
+                    if account_id and password in row:
+                        # assess this row!
+                        print(row)
+                        loggedin = True
+                        # a welcome contain first name and last name
+                        print(f'Welcome')
+                        break
+                else:
+                    print('incorrect account id or password!')
+                     
+            # to access to place in the row i can use row[index value] 
+            
       
 # Bank class
 class Bank:
@@ -152,7 +160,7 @@ class Bank:
             print("")
             
         
-
+# for testing
 # if __name__ == '__main__':
     
 Bank()
