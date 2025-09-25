@@ -2,7 +2,7 @@
 import csv
             
 # Casher class
-class Casher:
+class Cashier:
     
     # def __init__(self, account_id, first_name, last_name, password, checking_balance, saving_balance):
     #     self.account_id = account_id
@@ -12,7 +12,7 @@ class Casher:
     #     self.checking_balance = checking_balance
     #     self.saving_balance = saving_balance
     
-        
+    @staticmethod    
     def add_customer_account():
         
         print('Fill the following fields: ')
@@ -35,11 +35,7 @@ class Casher:
             
         first_name = input('Enter First name: ')
         while True:
-            # need modify (it write also if the rest in number ex. 383j or j888)
             if first_name.isalpha():
-                # with open('bank.csv','a',newline='') as file: 
-                #     writer = csv.writer(file )
-                    # writer.writerow(first_name.split(','))
                     break
             else:
                 print('First Name MUST contain only of string')
@@ -48,11 +44,7 @@ class Casher:
                 
         last_name = input('Enter Last name: ')
         while True:
-            # need modify (it write also if the rest in number ex. 383j or j888)
             if last_name.isalpha():
-                # with open('bank.csv','a',newline='') as file: 
-                #     writer = csv.writer(file )
-                    # writer.writerow(last_name.split(','))
                     break
             else:
                 print('Last Name MUST contain only of string')
@@ -63,10 +55,7 @@ class Casher:
         
         while True:
             if password != '' and len(password) == 9 :
-                
-                # with open('bank.csv','a+',newline='') as file: 
-                #     writer = csv.writer(file)
-                    # writer.writerow(password.split(','))
+
                     break
             else:
                 print('Password MUST contain of at least 9 inputs')
@@ -102,17 +91,19 @@ class Accounts:
         self.account_id = account_id
         self.password = password
         
-    def user_login():
+    def user_login(self):
         
         loggedin = False
         
+        
         while loggedin != True:
-            account_id = input('Account Id (Must contain of 5 digits): ')
-            password = input('Account Password (Must contain of 9 inputs): ')
+            self.account_id = input('Account Id (Must contain of 5 digits): ')
+            self.password = input('Account Password (Must contain of 9 inputs): ')
+            print('')
             with open('bank.csv','r',newline='')as file:
                 reader = csv.reader(file)
                 for row in reader:
-                    if row[0] == account_id and row[3] == password:
+                    if row[0] == self.account_id and row[3] == self.password:
                         loggedin = True
                         # a welcome contain first name and last name
                         print(f'Welcome back {row[1]} {row[2]}!')
@@ -127,22 +118,24 @@ class Accounts:
                             
                             selection = input("Enter a choice: ")
                             if(selection == "1"):
-                                print(Accounts.withdraw_money())
+                                self.withdraw_money()
                                 print("")
                                 
+                                
                             elif(selection == "2"):
-                                print(Accounts.deposit_money())
+                                self.deposit_money
                                 print("")
+                                
                             
                             elif (selection == "3"):
-                                print(Accounts.transfer_money())
+                                self.transfer_money
                                 print("")
+                                
                                 
                             elif (selection == "4"):
                                  print("")
                                  break
                                 # print(Bank.menu())
-                                # break
                             else:
                                 print("Invalid choice. Enter a Number choice from '1'-'4'")
                                 print("")
@@ -152,10 +145,17 @@ class Accounts:
                     print('incorrect account id or password!')
                      
             # to access to place in the row i can use row[index value]
-             # assess this row!print(row)
+            # assess this row!print(row)
             
-    def withdraw_money():
-        print('hi w')
+    def withdraw_money(self):
+        with open('bank.csv','r',newline='')as file:
+                reader = csv.reader(file)
+                for row in reader:
+                    if row[0] == self.account_id and row[3] == self.password:
+                        print(f'Checking account balance: {row[4]}')
+                        print('')
+                        print(f'Saving account balance: {row[5]}')
+                        print('')
         
     
     def deposit_money():
@@ -183,11 +183,12 @@ class Bank:
         selection = input("Enter a choice: ")
 
         if(selection == "1"):
-            print(Casher.add_customer_account())
+            Cashier.add_customer_account()
             print("")
             
         elif(selection == "2"):
-            print(Accounts.user_login())
+            acc = Accounts(account_id='', password='')
+            acc.user_login()
             print("")
             
         elif (selection == "3"):
