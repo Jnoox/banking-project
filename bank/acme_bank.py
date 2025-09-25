@@ -122,16 +122,59 @@ class Accounts:
                         print(row)
                         loggedin = True
                         # a welcome contain first name and last name
-                        print(f'Welcome')
-                        break
-                else:
-                    print('incorrect account id or password!')
+                        print(f'Welcome back {row[1]}!')
+                        while True:
+                            print("SELECT A CHOICE")
+                            print("")
+                            print("1- Withdraw Money")
+                            print("2- Deposit Money")
+                            print("3- Transfer Money")
+                            print("4- return to main")
+                            print("")
+                            
+                            selection = input("Enter a choice: ")
+                            if(selection == "1"):
+                                print(Accounts.withdraw_money())
+                                print("")
+                                break
+                            elif(selection == "2"):
+                                print(Accounts.deposit_money())
+                                print("")
+                                break
+                            elif (selection == "3"):
+                                print(Accounts.transfer_money())
+                                print("")
+                                break
+                            elif (selection == "4"):
+                                print(Bank.menu())
+                                break
+                            else:
+                                print("Invalid choice. Enter a Number choice from '1'-'4'")
+                                print("")
+                                
+                                
+        else:
+            print('incorrect account id or password!')
                      
-            # to access to place in the row i can use row[index value] 
+            # to access to place in the row i can use row[index value]
+            
+    def withdraw_money():
+        print('hi w')
+        
+    
+    def deposit_money():
+        print('hi d')
+        
+    
+    def transfer_money():
+        print('hi t')
+        
             
       
 # Bank class
 class Bank:
+    
+ def menu():
     while True:
         print('---------------------------------> Welcome to the ACME Bank! <---------------------------------')
         print("SELECT A CHOICE")
@@ -146,7 +189,7 @@ class Bank:
         if(selection == "1"):
             print(Casher.add_customer_account())
             print("")
-            2
+            
         elif(selection == "2"):
             print(Accounts.user_login())
             print("")
@@ -163,7 +206,7 @@ class Bank:
 # for testing
 # if __name__ == '__main__':
     
-Bank()
+Bank.menu()
           
     
     
