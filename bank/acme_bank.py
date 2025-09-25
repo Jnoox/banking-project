@@ -4,14 +4,6 @@ import csv
 # Casher class
 class Cashier:
     
-    # def __init__(self, account_id, first_name, last_name, password, checking_balance, saving_balance):
-    #     self.account_id = account_id
-    #     self.first_name = first_name
-    #     self.last_name = last_name
-    #     self.password = password
-    #     self.checking_balance = checking_balance
-    #     self.saving_balance = saving_balance
-    
     @staticmethod    
     def add_customer_account():
         
@@ -87,11 +79,12 @@ class Cashier:
                
 # Accounts class               
 class Accounts:
-    def __init__(self, account_id , password,account_type,checking_amount):
+    def __init__(self, account_id, password, account_type, checking_amount, saving_amount):
         self.account_id = account_id
         self.password = password
         self.account_type = account_type
         self.checking_amount = checking_amount
+        self.saving_amount = saving_amount
         
     def user_login(self):
         
@@ -160,24 +153,48 @@ class Accounts:
                     print('')
                     self.account_type = input('Withdraw from checking/saving): ')
                     if self.account_type == 'checking' or self.account_type == "Checking":
-                            self.checking_amount = input('Enter the amount (int or float): ')
-                            while True:
-                                try:
-                                    self.checking_amount = float(self.checking_amount)
-                                    value = float(row[4])
-                                    total = value - self.checking_amount
-                                    print(total)
-                                    break
-                                except ValueError:
+                        self.checking_amount = input('Enter the amount (int or float): ')
+                        try:
+                            self.checking_amount = float(self.checking_amount)
+                            value = float(row[4])
+                            total = value - self.checking_amount
+                            new_balance = round( total, 2)
+                            with open('bank.csv', 'r', newline='') as file:
+                                rows = list(csv.reader(file))
+                                for row in rows:
+                                    if row[0] == self.account_id:
+                                        row[4] = str(new_balance) 
+                                        print(f'New Checking account balance: {row[4]}')
+                                        break
+                        except ValueError:
                                     print('The amount MUST contain of number(int of float).')
+                                    
+                    elif self.account_type == 'saving' or self.account_type == "Saving":
+                        self.saving_amount = input('Enter the amount (int or float): ')
+                        try:
+                            self.saving_amount = float(self.saving_amount)
+                            value = float(row[5])
+                            total = value - self.saving_amount
+                            new_balance = round( total, 2)
+                            with open('bank.csv', 'r', newline='') as file:
+                                rows = list(csv.reader(file))
+                                for row in rows:
+                                    if row[0] == self.account_id:
+                                        row[5] = str(new_balance) 
+                                        print(f'New Checking account balance: {row[5]}')
+                                        break
+                        except ValueError:
+                                    print('The amount MUST contain of number(int of float).')
+                                    
+                        with open('bank.csv', 'w', newline='') as file:
+                            writer = csv.writer(file)
+                            writer.writerows(rows)
+
                         
                     else:
                         print('you should write (checking/saving) word!')
                             
-                            
-                        
-         
-    
+                             
     def deposit_money():
         print('hi d')
         
@@ -207,7 +224,7 @@ class Bank:
             print("")
             
         elif(selection == "2"):
-            acc = Accounts(account_id='', password='', account_type='', checking_amount = 0)
+            acc = Accounts(account_id='', password='', account_type='', checking_amount = 0, saving_amount = 0)
             acc.user_login()
             print("")
             
