@@ -285,17 +285,21 @@ class Accounts:
                         print("")
                         self.transfer_to = input("Transfer To: ")
                         if self.transfer_to == "1":
-                            self.checking_amount = input('Enter the amount (int or float): ')
+                            self.saving_amount = input('Enter the amount (int or float): ')
                             try:
-                                self.checking_amount = float(self.checking_amount)
+                                self.saving_amount = float(self.saving_amount)
                                 value = float(row[5])
-                                total = value + self.checking_amount
-                                new_balance = round( total, 2)
+                                value2 = float(row[4])
+                                total = value + self.saving_amount
+                                total2 = value2 - self.saving_amount
+                                new_balance_to = round( total, 2)
+                                new_balance_from = round( total2, 2)
                                 with open('bank.csv', 'r', newline='') as file:
                                     rows = list(csv.reader(file))
                                     for row in rows:
                                         if row[0] == self.account_id:
-                                            row[5] = str(new_balance)
+                                            row[5] = str(new_balance_to)
+                                            row[4] = str(new_balance_from)
                                             print(f'New Saving account balance: {row[5]}')
                                             break
                             except ValueError:
@@ -318,32 +322,36 @@ class Accounts:
                             try:
                                 self.checking_amount = float(self.checking_amount)
                                 value = float(row[4])
+                                value2 = float(row[5])
                                 total = value + self.checking_amount
-                                new_balance = round( total, 2)
+                                total2 = value2 - self.checking_amount
+                                new_balance_to = round( total, 2)
+                                new_balance_from = round( total2, 2)
                                 with open('bank.csv', 'r', newline='') as file:
                                     rows = list(csv.reader(file))
                                     for row in rows:
                                         if row[0] == self.account_id:
-                                            row[4] = str(new_balance)
-                                            print(f'New Checking account balance: {row[5]}')
+                                            row[4] = str(new_balance_to)
+                                            row[5] = str(new_balance_from)
+                                            print(f'New Checking account balance: {row[4]}')
                                             break
                             except ValueError:
                                 print('The amount MUST contain of number(int of float).')
-                            
+                                
                             with open('bank.csv', 'w', newline='') as file:
                                 writer = csv.writer(file)
                                 writer.writerows(rows)
                         
-                    elif (self.transfer_from  == "3"):
-                        print("Goodbye!")
-                        print("")
-                        break
-                    else:
-                        print("Invalid choice. Enter a Number choice from '1'-'3'")
-                        print("")
+                        
+                        elif (self.transfer_from  == "3"):
+                            print("Goodbye!")
+                            print("")
+                            break
+                        else:
+                            print("Invalid choice. Enter a Number choice from '1'-'3'")
+                            print("")
                 
-                              
-      
+                            
 # Bank class
 class Bank:
     
