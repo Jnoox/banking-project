@@ -79,7 +79,7 @@ class Cashier:
                
 # Accounts class               
 class Accounts:
-    def __init__(self, account_id, password, account_type, checking_amount, saving_amount, transfer_from, transfer_to) :
+    def __init__(self, account_id, password, account_type, checking_amount, saving_amount, transfer_from, transfer_to, target_id ) :
         self.account_id = account_id
         self.password = password
         self.account_type = account_type
@@ -87,6 +87,7 @@ class Accounts:
         self.saving_amount = saving_amount
         self.transfer_from = transfer_from
         self.transfer_to = transfer_to
+        self.target_id = target_id 
         
     def user_login(self):
         
@@ -104,42 +105,44 @@ class Accounts:
                         loggedin = True
                         # a welcome contain first name and last name
                         print(f'Welcome back {row[1]} {row[2]}!')
-                        while True:
-                            print("SELECT A CHOICE")
-                            print("")
-                            print("1- Withdraw Money")
-                            print("2- Deposit Money")
-                            print("3- Transfer Money")
-                            print("4- Logout")
-                            print("")
-                            
-                            selection = input("Enter a choice: ")
-                            if(selection == "1"):
-                                self.withdraw_money()
-                                print("")
-                                
-                                
-                            elif(selection == "2"):
-                                self.deposit_money()
-                                print("")
-                                
-                            
-                            elif (selection == "3"):
-                                self.transfer_money()
-                                print("")
-                                
-                                
-                            elif (selection == "4"):
-                                 print("")
-                                 break
-                                # print(Bank.menu())
-                            else:
-                                print("Invalid choice. Enter a Number choice from '1'-'4'")
-                                print("")
-                                
-                                
+                        break
                 else:
                     print('incorrect account id or password!')
+                    continue
+                         
+        while True:
+            print("SELECT A CHOICE")
+            print("")
+            print("1- Withdraw Money")
+            print("2- Deposit Money")
+            print("3- Transfer Money")
+            print("4- Logout")
+            print("")
+                            
+            selection = input("Enter a choice: ")
+            if(selection == "1"):
+                self.withdraw_money()
+                print("")
+                                
+                                
+            elif(selection == "2"):
+                self.deposit_money()
+                print("")
+                                
+                            
+            elif (selection == "3"):
+                self.transfer_money()
+                print("")
+                                
+                                
+            elif (selection == "4"):
+                print("")
+                break
+                # print(Bank.menu())
+            else:
+                print("Invalid choice. Enter a Number choice from '1'-'4'")
+                print("")
+                                
                     
             
     def withdraw_money(self):
@@ -254,6 +257,7 @@ class Accounts:
                         
                     else:
                         print('you should write (checking/saving) word!')
+                        
         
         
     
@@ -331,11 +335,11 @@ class Accounts:
                                                     writer = csv.writer(file)
                                                     writer.writerows(rows)   
                                                              
-                                    self.account_id = input('Enter the Account Id: ')
+                                    self.target_id = input('Enter the Account Id: ')
                                     with open('bank.csv','r',newline='') as file:
                                         reader = csv.reader(file)
                                         for row in reader:
-                                            if row[0] == self.account_id:
+                                            if row[0] == self.target_id :
                                                 print(f'You are transferring to {row[1]} {row[2]}!')
                                                 value = float(row[4])
                                                 total = value + self.checking_amount
@@ -343,9 +347,9 @@ class Accounts:
                                                 with open('bank.csv', 'r', newline='') as file:
                                                     rows = list(csv.reader(file))
                                                     for row in rows:
-                                                        if row[0] == self.account_id:
+                                                        if row[0] == self.target_id :
                                                             row[4] = str(new_balance) 
-                                                            print(f'Transfer {self.checking_amount} to {self.account_id} Successfully!')
+                                                            print(f'Transfer {self.checking_amount} to {self.target_id } Successfully!')
                                                             break
                                 except ValueError:
                                     print('The amount MUST contain of number(int of float).')
@@ -373,21 +377,21 @@ class Accounts:
                                                     writer = csv.writer(file)
                                                     writer.writerows(rows)   
                                                              
-                                    self.account_id = input('Enter the Account Id: ')
+                                    self.target_id  = input('Enter the Account Id: ')
                                     with open('bank.csv','r',newline='') as file:
                                         reader = csv.reader(file)
                                         for row in reader:
-                                            if row[0] == self.account_id:
+                                            if row[0] == self.target_id :
                                                 print(f'You are transferring to {row[1]} {row[2]}!')
                                                 value = float(row[4])
-                                                total = value + self.checking_amount
+                                                total = value + self.saving_amount
                                                 new_balance = round( total, 2)
                                                 with open('bank.csv', 'r', newline='') as file:
                                                     rows = list(csv.reader(file))
                                                     for row in rows:
-                                                        if row[0] == self.account_id:
+                                                        if row[0] == self.target_id :
                                                             row[4] = str(new_balance) 
-                                                            print(f'Transfer {self.checking_amount} to {self.account_id} Successfully!')
+                                                            print(f'Transfer {self.saving_amount} to {self.target_id } Successfully!')
                                                             break
                                 except ValueError:
                                     print('The amount MUST contain of number(int of float).')
@@ -452,11 +456,11 @@ class Accounts:
                                                     writer = csv.writer(file)
                                                     writer.writerows(rows)   
                                                              
-                                    self.account_id = input('Enter the Account Id: ')
+                                    self.target_id  = input('Enter the Account Id: ')
                                     with open('bank.csv','r',newline='') as file:
                                         reader = csv.reader(file)
                                         for row in reader:
-                                            if row[0] == self.account_id:
+                                            if row[0] == self.target_id :
                                                 print(f'You are transferring to {row[1]} {row[2]}!')
                                                 value = float(row[4])
                                                 total = value + self.checking_amount
@@ -464,9 +468,9 @@ class Accounts:
                                                 with open('bank.csv', 'r', newline='') as file:
                                                     rows = list(csv.reader(file))
                                                     for row in rows:
-                                                        if row[0] == self.account_id:
+                                                        if row[0] == self.target_id :
                                                             row[4] = str(new_balance) 
-                                                            print(f'Transfer {self.checking_amount} to {self.account_id} Successfully!')
+                                                            print(f'Transfer {self.checking_amount} to {self.target_id } Successfully!')
                                                             break
                                 except ValueError:
                                     print('The amount MUST contain of number(int of float).')
@@ -494,11 +498,11 @@ class Accounts:
                                                     writer = csv.writer(file)
                                                     writer.writerows(rows)   
                                                              
-                                    self.account_id = input('Enter the Account Id: ')
+                                    self.target_id  = input('Enter the Account Id: ')
                                     with open('bank.csv','r',newline='') as file:
                                         reader = csv.reader(file)
                                         for row in reader:
-                                            if row[0] == self.account_id:
+                                            if row[0] == self.target_id :
                                                 print(f'You are transferring to {row[1]} {row[2]}!')
                                                 value = float(row[4])
                                                 total = value + self.saving_amount
@@ -506,9 +510,9 @@ class Accounts:
                                                 with open('bank.csv', 'r', newline='') as file:
                                                     rows = list(csv.reader(file))
                                                     for row in rows:
-                                                        if row[0] == self.account_id:
+                                                        if row[0] == self.target_id :
                                                             row[4] = str(new_balance) 
-                                                            print(f'Transfer {self.saving_amount} to {self.account_id} Successfully!')
+                                                            print(f'Transfer {self.saving_amount} to {self.target_id } Successfully!')
                                                             break
                                 except ValueError:
                                     print('The amount MUST contain of number(int of float).')
@@ -519,13 +523,13 @@ class Accounts:
                             else:
                                 print('you should write (checking/saving) word!')
                         
-                        elif (self.transfer_from  == "3"):
+                    elif (self.transfer_from  == "3"):
                             print("Goodbye!")
                             print("")
                             break
-                        else:
-                            print("Invalid choice. Enter a Number choice from '1'-'3'")
-                            print("")
+                    else:
+                        print("Invalid choice. Enter a Number choice from '1'-'3'")
+                        print("")
                 
                             
 # Bank class
@@ -548,7 +552,7 @@ class Bank:
             print("")
             
         elif(selection == "2"):
-            acc = Accounts(account_id='', password='', account_type='', checking_amount = 0, saving_amount = 0, transfer_from ='', transfer_to ='')
+            acc = Accounts(account_id='', password='', account_type='', checking_amount = 0, saving_amount = 0, transfer_from ='', transfer_to ='', target_id ='')
             acc.user_login()
             print("")
             
