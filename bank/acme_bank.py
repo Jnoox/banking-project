@@ -73,13 +73,13 @@ class Cashier:
                 
         with open('bank.csv','a',newline='') as file: 
                 writer = csv.writer(file)        
-                writer.writerow([account_id, first_name, last_name, password, initial_checking_balance, initial_saving_balance])
+                writer.writerow([account_id, first_name, last_name, password, initial_checking_balance, initial_saving_balance, 'activated', 0])
         print('Customer account added successfully!')
 
                
 # Accounts class               
 class Accounts:
-    def __init__(self, account_id, password, account_type, checking_amount, saving_amount, transfer_from, transfer_to, target_id , overdraft_limit) :
+    def __init__(self, account_id, password, account_type, checking_amount, saving_amount, transfer_from, transfer_to, target_id , overdraft_limit, overdraft_fee) :
         self.account_id = account_id
         self.password = password
         self.account_type = account_type
@@ -89,6 +89,7 @@ class Accounts:
         self.transfer_to = transfer_to
         self.target_id = target_id 
         self.overdraft_limit = overdraft_limit
+        self.overdraft_fee = overdraft_fee
         
     def user_login(self):
         
@@ -137,7 +138,6 @@ class Accounts:
             elif (selection == "4"):
                 print("")
                 break
-                # print(Bank.menu())
             else:
                 print("Invalid choice. Enter a Number choice from '1'-'4'")
                 print("")
@@ -156,6 +156,7 @@ class Accounts:
                     print('')
                     self.account_type = input('Withdraw from checking/saving): ')
                     if self.account_type.lower() == 'checking':
+                        
                         self.checking_amount = input('Enter the amount (int or float): ')
                         try:
                             self.checking_amount = float(self.checking_amount)
@@ -164,38 +165,85 @@ class Accounts:
                             if value - self.checking_amount >= 0:
                                 total = value - self.checking_amount
                                 new_balance = round( total, 2)
+                                
+                                for r in rows:
+                                    if r[0] == self.account_id:
+                                        r[4] = str(new_balance)
+                                        print(f'New Checking account balance: {r[4]}')
                         
                             elif value - self.checking_amount >= -100 and self.overdraft_limit < 2:
                                 total = value - self.checking_amount 
                                 # overdraft fee
+                                self.overdraft_fee = self.overdraft_fee + 35
                                 total = total - 35
                                 self.overdraft_limit = self.overdraft_limit + 1
                                 new_balance = round( total, 2)
                                 print(f'- Overdraft fee $35!, Overdraft limit {self.overdraft_limit}')
-                                
-                        
-                            elif self.overdraft_limit == 2:
-                                account_status = 'not_activated'
                                 for r in rows:
                                     if r[0] == self.account_id:
-                                        r[6] = str(account_status)
+                                        r[7] = str(self.overdraft_fee)
+                                        r[4] = str(new_balance)
+                                        print(f'New Checking account balance: {r[4]}')
+                                        
+                                if new_balance < -100:
+                                    print('you cant withdraw more than $100 if your account negative!')
+                                    return
                                         
                                 with open('bank.csv', 'w', newline='') as file:
                                     writer = csv.writer(file)
                                     writer.writerows(rows) 
+                                
+                                
+                            elif self.overdraft_limit >= 2:
+                                for r in rows:
+                                    if r[0] == self.account_id:
+                                        r[6] = 'not_activated'
+                                        r[7] = str(self.overdraft_fee)
+                                        
+                                with open('bank.csv', 'w', newline='') as file:
+                                    writer = csv.writer(file)
+                                    writer.writerows(rows) 
+                            
                                     
                                 print('your account in not activated, u need to pay the fee!')
-                                break 
-                            
-                            
-                            else:
-                                 print('you cant withdraw more than 100 if your account negative!')
-                                        
-                            
-                            for r in rows:
-                                if r[0] == self.account_id:
-                                    r[4] = str(new_balance)
-                                    print(f'New Checking account balance: {r[4]}')
+                                pay_fee = input('you want to pay the fee? (y/n)')
+                                if pay_fee == 'y':
+                                    for r in rows:
+                                        if r[0] == self.account_id:
+                                            fee = float(r[7])
+                                            
+                                            if fee > 0:
+                                                print(f'Your overdraft fee is ${fee}')
+                                                while True:
+                                                    pay_from = input('Do you want to pay fee from (checking/saving): ')
+                                                    
+                                                    if pay_from.lower() == 'checking':
+                                                        value = float(r[4])
+                                                        if value >= fee:
+                                                            total = value - fee
+                                                            r[4] = str(round(total,2))
+                                                            print('Fee paid, your account reactivated!')
+                                                            r[6] = 'activated'
+                                                            r[7] = '0'
+                                                            break
+                                                        else:
+                                                            print('There is no enough money!')
+                                                    
+                                                    elif pay_from.lower() == 'saving':
+                                                        value = float(r[5])
+                                                        if value >= fee:
+                                                            total = value - fee
+                                                            r[5] = str(round(total,2))
+                                                            print('Fee paid, your account reactivated!')
+                                                            r[6] = 'activated'
+                                                            r[7] = '0'
+                                                            break
+                                                        else:
+                                                            print('There is no enough money!')
+                                                    else:
+                                                        print('you should write (checking/saving) word!')         
+                                elif pay_fee =='n':
+                                    return
                                     
                                     
                             with open('bank.csv', 'w', newline='') as file:
@@ -207,32 +255,103 @@ class Accounts:
                                     
                                     
 
+                    if self.account_type.lower() == 'saving':
                         
-                                   
-                    elif self.account_type == 'saving' or self.account_type == "Saving":
                         self.saving_amount = input('Enter the amount (int or float): ')
                         try:
                             self.saving_amount = float(self.saving_amount)
                             value = float(row[5])
-                            total = value - self.saving_amount
-                            new_balance = round( total, 2)
-                            with open('bank.csv', 'r', newline='') as file:
-                                rows = list(csv.reader(file))
-                                for row in rows:
-                                    if row[0] == self.account_id:
-                                        row[5] = str(new_balance) 
-                                        print(f'New Checking account balance: {row[5]}')
-                                        break
+                            
+                            if value - self.saving_amount >= 0:
+                                total = value - self.saving_amount
+                                new_balance = round( total, 2)
+                                
+                                for r in rows:
+                                    if r[0] == self.account_id:
+                                        r[5] = str(new_balance)
+                                        print(f'New Saving account balance: {r[5]}')
+                        
+                            elif value - self.saving_amount >= -100 and self.overdraft_limit < 2:
+                                total = value - self.saving_amount 
+                                # overdraft fee
+                                self.overdraft_fee = self.overdraft_fee + 35
+                                total = total - 35
+                                self.overdraft_limit = self.overdraft_limit + 1
+                                new_balance = round( total, 2)
+                                print(f'- Overdraft fee $35!, Overdraft limit {self.overdraft_limit}')
+                                for r in rows:
+                                    if r[0] == self.account_id:
+                                        r[7] = str(self.overdraft_fee)
+                                        r[5] = str(new_balance)
+                                        print(f'New Saving account balance: {r[5]}')
+                                        
+                                if new_balance < -100:
+                                    print('you cant withdraw more than $100 if your account negative!')
+                                    return
+                                        
+                                with open('bank.csv', 'w', newline='') as file:
+                                    writer = csv.writer(file)
+                                    writer.writerows(rows) 
+                                
+                                
+                            elif self.overdraft_limit >= 2:
+                                for r in rows:
+                                    if r[0] == self.account_id:
+                                        r[6] = 'not_activated'
+                                        r[7] = str(self.overdraft_fee)
+                                        
+                                with open('bank.csv', 'w', newline='') as file:
+                                    writer = csv.writer(file)
+                                    writer.writerows(rows) 
+                            
+                                    
+                                print('your account in not activated, u need to pay the fee!')
+                                pay_fee = input('you want to pay the fee? (y/n)')
+                                if pay_fee == 'y':
+                                    for r in rows:
+                                        if r[0] == self.account_id:
+                                            fee = float(r[7])
+                                            
+                                            if fee > 0:
+                                                print(f'Your overdraft fee is ${fee}')
+                                                while True:
+                                                    pay_from = input('Do you want to pay fee from (checking/saving): ')
+                                                    
+                                                    if pay_from.lower() == 'checking':
+                                                        value = float(r[4])
+                                                        if value >= fee:
+                                                            total = value - fee
+                                                            r[4] = str(round(total,2))
+                                                            print('Fee paid, your account reactivated!')
+                                                            r[6] = 'activated'
+                                                            r[7] = '0'
+                                                            break
+                                                        else:
+                                                            print('There is no enough money!')
+                                                    
+                                                    elif pay_from.lower() == 'saving':
+                                                        value = float(r[5])
+                                                        if value >= fee:
+                                                            total = value - fee
+                                                            r[5] = str(round(total,2))
+                                                            print('Fee paid, your account reactivated!')
+                                                            r[6] = 'activated'
+                                                            r[7] = '0'
+                                                            break
+                                                        else:
+                                                            print('There is no enough money!')
+                                                    else:
+                                                        print('you should write (checking/saving) word!')         
+                                elif pay_fee =='n':
+                                    return
+                                    
+                                    
+                            with open('bank.csv', 'w', newline='') as file:
+                                writer = csv.writer(file)
+                                writer.writerows(rows) 
+                                
                         except ValueError:
                                     print('The amount MUST contain of number(int of float).')
-                                    
-                        with open('bank.csv', 'w', newline='') as file:
-                            writer = csv.writer(file)
-                            writer.writerows(rows)
-
-                        
-                    else:
-                        print('you should write (checking/saving) word!')
                             
                              
     def deposit_money(self):
@@ -244,7 +363,7 @@ class Accounts:
                     print(f'Checking account balance: {row[4]}')
                     print(f'Saving account balance: {row[5]}')
                     print('')
-                    self.account_type = input('Deposit from checking/saving): ')
+                    self.account_type = input('Deposit to checking/saving): ')
                     if self.account_type == 'checking' or self.account_type == "Checking":
                         self.checking_amount = input('Enter the amount (int or float): ')
                         try:
@@ -495,7 +614,7 @@ class Bank:
             print("")
             
         elif(selection == "2"):
-            acc = Accounts(account_id='', password='', account_type='', checking_amount = 0, saving_amount = 0, transfer_from ='', transfer_to ='', target_id ='' , overdraft_limit = 0)
+            acc = Accounts(account_id='', password='', account_type='', checking_amount = 0, saving_amount = 0, transfer_from ='', transfer_to ='', target_id ='' , overdraft_limit = 0, overdraft_fee = 0)
             acc.user_login()
             print("")
             
