@@ -79,7 +79,7 @@ class Cashier:
                
 # Accounts class               
 class Accounts:
-    def __init__(self, account_id, password, account_type, checking_amount, saving_amount, transfer_from, transfer_to, target_id ) :
+    def __init__(self, account_id, password, account_type, checking_amount, saving_amount, transfer_from, transfer_to, target_id , overdraft_limit) :
         self.account_id = account_id
         self.password = password
         self.account_type = account_type
@@ -88,6 +88,7 @@ class Accounts:
         self.transfer_from = transfer_from
         self.transfer_to = transfer_to
         self.target_id = target_id 
+        self.overdraft_limit = overdraft_limit
         
     def user_login(self):
         
@@ -145,35 +146,69 @@ class Accounts:
             
     def withdraw_money(self):
         with open('bank.csv','r',newline='') as file:
-            reader = csv.reader(file)
-            for row in reader:
+            rows = list(csv.reader(file))
+            
+            for row in rows:
                 if row[0] == self.account_id and row[3] == self.password:
                     print('')
                     print(f'Checking account balance: {row[4]}')
                     print(f'Saving account balance: {row[5]}')
                     print('')
                     self.account_type = input('Withdraw from checking/saving): ')
-                    if self.account_type == 'checking' or self.account_type == "Checking":
+                    if self.account_type.lower() == 'checking':
                         self.checking_amount = input('Enter the amount (int or float): ')
                         try:
                             self.checking_amount = float(self.checking_amount)
                             value = float(row[4])
-                            total = value - self.checking_amount
-                            new_balance = round( total, 2)
-                            with open('bank.csv', 'r', newline='') as file:
-                                rows = list(csv.reader(file))
-                                for row in rows:
-                                    if row[0] == self.account_id:
-                                        row[4] = str(new_balance) 
-                                        print(f'New Checking account balance: {row[4]}')
-                                        break
+                            
+                            if value - self.checking_amount >= 0:
+                                total = value - self.checking_amount
+                                new_balance = round( total, 2)
+                        
+                            elif value - self.checking_amount >= -100 and self.overdraft_limit < 2:
+                                total = value - self.checking_amount 
+                                # overdraft fee
+                                total = total - 35
+                                self.overdraft_limit = self.overdraft_limit + 1
+                                new_balance = round( total, 2)
+                                print(f'- Overdraft fee $35!, Overdraft limit {self.overdraft_limit}')
+                                
+                        
+                            elif self.overdraft_limit == 2:
+                                account_status = 'not_activated'
+                                for r in rows:
+                                    if r[0] == self.account_id:
+                                        r[6] = str(account_status)
+                                        
+                                with open('bank.csv', 'w', newline='') as file:
+                                    writer = csv.writer(file)
+                                    writer.writerows(rows) 
+                                    
+                                print('your account in not activated, u need to pay the fee!')
+                                break 
+                            
+                            
+                            else:
+                                 print('you cant withdraw more than 100 if your account negative!')
+                                        
+                            
+                            for r in rows:
+                                if r[0] == self.account_id:
+                                    r[4] = str(new_balance)
+                                    print(f'New Checking account balance: {r[4]}')
+                                    
+                                    
+                            with open('bank.csv', 'w', newline='') as file:
+                                writer = csv.writer(file)
+                                writer.writerows(rows) 
+                                
                         except ValueError:
                                     print('The amount MUST contain of number(int of float).')
-                        
-                        with open('bank.csv', 'w', newline='') as file:
-                            writer = csv.writer(file)
-                            writer.writerows(rows)
                                     
+                                    
+
+                        
+                                   
                     elif self.account_type == 'saving' or self.account_type == "Saving":
                         self.saving_amount = input('Enter the amount (int or float): ')
                         try:
@@ -460,7 +495,7 @@ class Bank:
             print("")
             
         elif(selection == "2"):
-            acc = Accounts(account_id='', password='', account_type='', checking_amount = 0, saving_amount = 0, transfer_from ='', transfer_to ='', target_id ='')
+            acc = Accounts(account_id='', password='', account_type='', checking_amount = 0, saving_amount = 0, transfer_from ='', transfer_to ='', target_id ='' , overdraft_limit = 0)
             acc.user_login()
             print("")
             
