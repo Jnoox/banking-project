@@ -484,6 +484,18 @@ class Accounts:
                                     writer.writerows(rows)   
                                                              
                                 self.target_id = input('Enter the Account Id: ')
+                                
+                                with open('bank.csv', 'r', newline='') as file:
+                                    rows = list(csv.reader(file))
+                                    target_exists = False
+                                    for r in rows:
+                                        if r[0] == self.target_id:
+                                            target_exists = True
+                                            break
+                                if not target_exists:
+                                    print("The account dont exist!")
+                                    return 
+                                
                                 with open('bank.csv','r',newline='') as file:
                                     reader = csv.reader(file)
                                     for row in reader:
@@ -499,12 +511,14 @@ class Accounts:
                                             row[4] = str(new_balance) 
                                             print(f'Transfer {self.checking_amount} to {self.target_id } Successfully!')
                                             break
+                                        
+                                with open('bank.csv', 'w', newline='') as file:
+                                    writer = csv.writer(file)
+                                    writer.writerows(rows)
                             except ValueError:
                                 print('The amount MUST contain of number(int of float).')
                                     
-                            with open('bank.csv', 'w', newline='') as file:
-                                writer = csv.writer(file)
-                                writer.writerows(rows)
+                           
                                 
                                 
                     elif(self.transfer_from  == "2"):
@@ -560,6 +574,18 @@ class Accounts:
                                     writer.writerows(rows)   
                                                              
                                 self.target_id  = input('Enter the Account Id: ')
+                                
+                                with open('bank.csv', 'r', newline='') as file:
+                                    rows = list(csv.reader(file))
+                                    target_exists = False
+                                    for r in rows:
+                                        if r[0] == self.target_id:
+                                            target_exists = True
+                                            break
+                                if not target_exists:
+                                    print("The account dont exist!")
+                                    return 
+                                
                                 with open('bank.csv','r',newline='') as file:
                                     reader = csv.reader(file)
                                     for row in reader:
@@ -576,12 +602,14 @@ class Accounts:
                                             print(f'Transfer {self.saving_amount} to {self.target_id } Successfully!')
                                             break
                                         
+                                with open('bank.csv', 'w', newline='') as file:
+                                    writer = csv.writer(file)
+                                    writer.writerows(rows)
+                                        
                             except ValueError:
                                 print('The amount MUST contain of number(int of float).')
                                     
-                            with open('bank.csv', 'w', newline='') as file:
-                                writer = csv.writer(file)
-                                writer.writerows(rows)
+                           
                             
                         
                     elif (self.transfer_from  == "3"):
