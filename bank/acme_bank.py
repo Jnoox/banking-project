@@ -67,9 +67,9 @@ class Cashier:
             try:
                 initial_saving_balance = float(initial_saving_balance)
                 break
-            except TypeError:
-                print('Initial checking balance MUST contain of number (int or float).')
-                initial_saving_balance = input('Enter initial Checking balance (int or float): ')
+            except ValueError:
+                print('Initial Saving balance MUST contain of number (int or float).')
+                initial_saving_balance = input('Enter initial Saving balance (int or float): ')
                 
         with open('bank.csv','a',newline='') as file: 
                 writer = csv.writer(file)        
@@ -225,6 +225,10 @@ class Accounts:
                                                             print('Fee paid, your account reactivated!')
                                                             r[6] = 'activated'
                                                             r[7] = '0'
+                                                            
+                                                            self.overdraft_fee = 0
+                                                            self.overdraft_limit = 0
+                                                            
                                                             break
                                                         else:
                                                             print('There is no enough money!')
@@ -237,6 +241,10 @@ class Accounts:
                                                             print('Fee paid, your account reactivated!')
                                                             r[6] = 'activated'
                                                             r[7] = '0'
+                                                            
+                                                            self.overdraft_fee = 0
+                                                            self.overdraft_limit = 0
+                                                            
                                                             break
                                                         else:
                                                             print('There is no enough money!')
@@ -306,7 +314,7 @@ class Accounts:
                             
                                     
                                 print('your account in not activated, u need to pay the fee!')
-                                pay_fee = input('you want to pay the fee? (y/n)')
+                                pay_fee = input('you want to pay the fee? (y/n): ')
                                 if pay_fee == 'y':
                                     for r in rows:
                                         if r[0] == self.account_id:
@@ -325,6 +333,10 @@ class Accounts:
                                                             print('Fee paid, your account reactivated!')
                                                             r[6] = 'activated'
                                                             r[7] = '0'
+                                                            
+                                                            self.overdraft_fee = 0
+                                                            self.overdraft_limit = 0
+                                                            
                                                             break
                                                         else:
                                                             print('There is no enough money!')
@@ -337,6 +349,10 @@ class Accounts:
                                                             print('Fee paid, your account reactivated!')
                                                             r[6] = 'activated'
                                                             r[7] = '0'
+                                                            
+                                                            self.overdraft_fee = 0
+                                                            self.overdraft_limit = 0
+                                                            
                                                             break
                                                         else:
                                                             print('There is no enough money!')
