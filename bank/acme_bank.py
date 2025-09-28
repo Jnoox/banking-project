@@ -656,9 +656,8 @@ class Bank:
             
         
 # for testing
-# if __name__ == '__main__':
-    
-Bank.menu()
+if __name__ == '__main__':  
+    Bank.menu()
           
     
     
