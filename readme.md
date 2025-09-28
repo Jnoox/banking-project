@@ -1,4 +1,3 @@
-                                                                                  <!-- Banking Project readme file -->
 
 ACME Bank System
 
