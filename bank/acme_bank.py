@@ -154,7 +154,7 @@ class Accounts:
                     print(f'Checking account balance: {row[4]}')
                     print(f'Saving account balance: {row[5]}')
                     print('')
-                    self.account_type = input('Withdraw from checking/saving): ')
+                    self.account_type = input('Withdraw from (checking/saving): ')
                     if self.account_type.lower() == 'checking':
                         
                         self.checking_amount = input('Enter the amount (int or float): ')
@@ -379,7 +379,7 @@ class Accounts:
                     print(f'Checking account balance: {row[4]}')
                     print(f'Saving account balance: {row[5]}')
                     print('')
-                    self.account_type = input('Deposit to checking/saving): ')
+                    self.account_type = input('Deposit to (checking/saving): ')
                     if self.account_type == 'checking' or self.account_type == "Checking":
                         self.checking_amount = input('Enter the amount (int or float): ')
                         try:
